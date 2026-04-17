@@ -14,16 +14,21 @@ Most research skills stop at "search → summarize." This one adds adversarial v
 
 ## Installation
 
-### Per-Project (recommended)
+### Claude Code (one-time setup)
 
-Clone and copy the skills into your project's `.claude/skills/` directory:
+```
+/plugin marketplace add dittoanec/deep-research-skill
+/plugin install titan-research-kit@titan-research-marketplace
+```
+
+### Per-Project (copy skills directly)
 
 ```bash
 git clone https://github.com/dittoanec/deep-research-skill.git /tmp/titan-research-kit
 cp -r /tmp/titan-research-kit/skills/ .claude/skills/
 ```
 
-That's it. Claude Code auto-detects skills in `.claude/skills/` — no restart needed.
+Claude Code auto-detects skills in `.claude/skills/` — no restart needed.
 
 ### Global (all projects)
 
