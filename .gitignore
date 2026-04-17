@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+dist/
+build/
+research_output/
+eval_output/
+brainstorm_output/
+research_state/
+.DS_Store
