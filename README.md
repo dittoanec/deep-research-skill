@@ -33,7 +33,7 @@ Novel angle generator that pushes beyond what RAG or obvious reasoning produces.
 ### Installation
 
 ```bash
-git clone https://github.com/davidyseo/titan-research-kit.git
+git clone https://github.com/dittoanec/deep-research-skill.git titan-research-kit
 cd titan-research-kit
 python3 -m venv .venv
 source .venv/bin/activate
@@ -43,17 +43,26 @@ pip install -r requirements.txt
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### Claude CLI
+### Claude Code Skills
 
+**Global install** (available in all projects):
 ```bash
-# Add the skill to any project
-claude skill add /path/to/titan-research-kit
-
-# Then ask naturally — the master router picks the right skill:
-# "Do deep research on X"        → deep-research
-# "Judge these outputs"           → eval-loop  
-# "Brainstorm angles for Y"      → brainstorm
+# Symlink so updates to the repo auto-apply
+mkdir -p ~/.claude/skills/deep-research ~/.claude/skills/eval-loop ~/.claude/skills/brainstorm
+ln -sf /path/to/titan-research-kit/skills/deep-research/SKILL.md ~/.claude/skills/deep-research/SKILL.md
+ln -sf /path/to/titan-research-kit/skills/eval-loop/SKILL.md ~/.claude/skills/eval-loop/SKILL.md
+ln -sf /path/to/titan-research-kit/skills/brainstorm/SKILL.md ~/.claude/skills/brainstorm/SKILL.md
 ```
+
+**Per-project install** (copy into any repo):
+```bash
+cp -r /path/to/titan-research-kit/skills/ your-project/.claude/skills/
+```
+
+Claude Code auto-detects skill changes — no restart needed. Then just ask naturally:
+- *"Do deep research on X"* → deep-research
+- *"Judge these outputs"* → eval-loop
+- *"Brainstorm angles for Y"* → brainstorm
 
 ### Python / Nova
 
