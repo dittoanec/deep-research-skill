@@ -1,70 +1,60 @@
 # 🔬 Titan Research Kit
 
-A unified research skill set for AI coding agents. Three capabilities, one toolkit — usable from both **Claude CLI** (skill-based) and **Python/Nova** (programmatic).
+An agentic research skill set that goes beyond single-pass research. Three capabilities — deep research, eval loop, and brainstorm — in one plugin.
 
-## Capabilities
+Most research skills stop at "search → summarize." This one adds adversarial validation (hard-gated Challenger that can't be skipped), configurable eval loops (judge → regen → measure lift), and structured brainstorming with anti-cliché guards.
 
-### 1. Deep Research
-Multi-pass **ARCHITECT → MINER → CHALLENGER → COMPILER** pipeline that produces decision-ready output with typed claims, evidence tiers, and adversarial review.
+## What It Does
 
-- Decomposes questions into MECE sub-questions
-- Gathers structured, falsifiable claims with source attribution
-- Adversarial Challenger red-teams every finding
-- Compiles into BLUF report with Decision Matrix and NOW/NEXT/NEVER actions
+1. **Deep Research** — Multi-pass ARCHITECT → MINER → CHALLENGER → COMPILER pipeline. Typed claims, evidence tiers, adversarial review. Output: decision-ready BLUF report.
 
-### 2. Eval Loop
-**Judge → Rank → Regenerate → Re-judge** cycle that systematically improves batch quality. Configurable rubrics with built-in presets.
+2. **Eval Loop** — Judge a batch of outputs on a configurable rubric, regenerate the bottom 25% with feedback injection, re-judge to measure lift. Proves improvement quantitatively.
 
-- Score outputs on N axes (0-5 each) using Claude-as-judge
-- Rank by total score, regenerate bottom N% with feedback injection
-- Re-judge to measure lift — proves the loop works quantitatively
-- Compound iteration (run 2-3 passes for diminishing-returns optimization)
+3. **Brainstorm** — Generate novel angles for any topic. Bans the 3 most obvious framings before generating, enforces diversity across life contexts.
 
-### 3. Brainstorm
-Novel angle generator that pushes beyond what RAG or obvious reasoning produces. Anti-cliché guards enforce genuine diversity.
+## Installation
 
-- Bans the 3 most obvious angles before generating
-- Enforces diversity across life contexts (domestic, creative, physical, philosophical)
-- Each angle includes concrete details that seed full content pieces
-- Domain-agnostic — works for any content type, not just anecdotes
+### Claude Code (Plugin)
 
-## Quick Start
+```
+/plugin install titan-research-kit@superpowers-marketplace
+```
 
-### Installation
+Or install manually — copy the skills into your project:
+
+```bash
+git clone https://github.com/dittoanec/deep-research-skill.git
+cp -r deep-research-skill/skills/ your-project/.claude/skills/
+```
+
+### Global Install (All Projects)
+
+```bash
+git clone https://github.com/dittoanec/deep-research-skill.git ~/.titan-research-kit
+mkdir -p ~/.claude/skills
+ln -sf ~/.titan-research-kit/skills/deep-research ~/.claude/skills/deep-research
+ln -sf ~/.titan-research-kit/skills/eval-loop ~/.claude/skills/eval-loop
+ln -sf ~/.titan-research-kit/skills/brainstorm ~/.claude/skills/brainstorm
+```
+
+### Python Package (for programmatic use)
 
 ```bash
 git clone https://github.com/dittoanec/deep-research-skill.git titan-research-kit
 cd titan-research-kit
-python3 -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
-
-# Set your API key
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### Claude Code Skills
+## Usage
 
-**Global install** (available in all projects):
-```bash
-# Symlink so updates to the repo auto-apply
-mkdir -p ~/.claude/skills/deep-research ~/.claude/skills/eval-loop ~/.claude/skills/brainstorm
-ln -sf /path/to/titan-research-kit/skills/deep-research/SKILL.md ~/.claude/skills/deep-research/SKILL.md
-ln -sf /path/to/titan-research-kit/skills/eval-loop/SKILL.md ~/.claude/skills/eval-loop/SKILL.md
-ln -sf /path/to/titan-research-kit/skills/brainstorm/SKILL.md ~/.claude/skills/brainstorm/SKILL.md
-```
+Once installed, just ask naturally. The skills trigger automatically:
 
-**Per-project install** (copy into any repo):
-```bash
-cp -r /path/to/titan-research-kit/skills/ your-project/.claude/skills/
-```
+- *"Do deep research on X"* → runs the full 4-phase pipeline
+- *"Judge these outputs"* → runs eval loop with content rubric
+- *"Brainstorm angles for Y"* → generates novel angles
 
-Claude Code auto-detects skill changes — no restart needed. Then just ask naturally:
-- *"Do deep research on X"* → deep-research
-- *"Judge these outputs"* → eval-loop
-- *"Brainstorm angles for Y"* → brainstorm
-
-### Python / Nova
+### Python API
 
 ```python
 from titan_research_kit.research import ResearchOrchestrator
@@ -75,34 +65,21 @@ from titan_research_kit.brainstorm import brainstorm_angles
 report = ResearchOrchestrator().run("What is the best approach to X?")
 
 # Eval loop
-loop = EvalLoop(rubric=CONTENT_RUBRIC)
-results = loop.run(["item 1 text", "item 2 text", ...])
-print(f"Lift: {results.avg_lift:+.2f}")
+results = EvalLoop(rubric=CONTENT_RUBRIC).run(["item 1", "item 2", ...])
 
 # Brainstorm
-angles = brainstorm_angles(
-    domain="blog posts",
-    topics={"ai_ethics": {"keywords": ["bias", "fairness"], "emotional_arc": "tension → resolution"}},
-    per_topic=15,
-)
+angles = brainstorm_angles(domain="blog posts", topics={"ai": {"keywords": ["ethics"]}})
 ```
 
 ### CLI
 
 ```bash
-# Deep research
 python -m titan_research_kit research "What is the best database for time-series data?"
-
-# Brainstorm
-python -m titan_research_kit brainstorm --domain "content creation" --topics ai,leadership --per-topic 10
-
-# Eval loop
-python -m titan_research_kit eval --input outputs.txt --rubric content --regen-bottom 0.25
+python -m titan_research_kit eval --input outputs.txt --rubric content
+python -m titan_research_kit brainstorm --domain "content" --topics ai,leadership
 ```
 
 ## Rubric Presets
-
-The eval loop ships with three built-in rubrics:
 
 | Preset | Axes | Best For |
 |--------|------|----------|
@@ -110,64 +87,23 @@ The eval loop ships with three built-in rubrics:
 | `research` | accuracy, evidence_quality, balance, actionability | Research claims, analysis |
 | `code` | correctness, readability, efficiency, robustness | Code review, generated code |
 
-Custom rubrics:
-```python
-from titan_research_kit.models import JudgeRubric, JudgeAxis
+Custom rubrics are also supported — see `titan_research_kit/eval/rubrics.py`.
 
-MY_RUBRIC = JudgeRubric(
-    name="tweets",
-    axes=[
-        JudgeAxis(name="hook", description="Does the first line stop the scroll?", weight=2.0),
-        JudgeAxis(name="clarity", description="Is the point immediately clear?", weight=1.0),
-        JudgeAxis(name="shareability", description="Would someone RT this?", weight=1.5),
-    ],
-)
-```
+## How It's Different
 
-## Project Structure
-
-```
-titan-research-kit/
-├── .claude/skills/              # Master router skill
-│   └── titan-research.md
-├── skills/                      # Claude CLI skill definitions
-│   ├── deep-research/SKILL.md
-│   ├── eval-loop/SKILL.md
-│   └── brainstorm/SKILL.md
-├── agents/                      # Agent profiles
-│   ├── researcher.md
-│   ├── challenger.md
-│   ├── compiler.md
-│   └── judge.md
-└── titan_research_kit/          # Python package
-    ├── config.py                # Unified configuration
-    ├── models.py                # Pydantic data models
-    ├── cli.py                   # CLI entry point
-    ├── research/                # Deep research engine
-    │   ├── orchestrator.py      # Multi-pass loop controller
-    │   └── agents/              # Researcher, Challenger, Compiler
-    ├── eval/                    # Eval loop engine
-    │   ├── judge.py             # Configurable rubric judge
-    │   ├── regenerator.py       # Feedback-injected regeneration
-    │   ├── loop.py              # Judge→Rank→Regen→Rejudge orchestrator
-    │   └── rubrics.py           # Built-in presets
-    ├── brainstorm/              # Brainstorm engine
-    │   └── angles.py            # Novel angle generator
-    └── prompts/                 # System prompts (shared)
-```
-
-## Environment Variables
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `ANTHROPIC_API_KEY` | ✅ | — | Anthropic API key |
-| `MODEL` | — | `claude-sonnet-4-20250514` | Default model |
-| `FALLBACK_MODEL` | — | `claude-haiku-4-5-20251001` | Fallback model |
+| | Typical research skills | Titan Research Kit |
+|-|-------------------------|-------------------|
+| **Scope** | Research only | Research + eval loop + brainstorm |
+| **Adversarial review** | Optional or performative | Hard-gated — Challenger can't be skipped |
+| **Evidence** | Free-form summaries | Typed claims with 5-tier evidence governance |
+| **Quality loop** | ❌ | Judge → regen → re-judge with measured lift |
+| **Brainstorm** | ❌ | Anti-cliché guards + diversity enforcement |
+| **Integration** | Skill-only or code-only | Both: Claude CLI skills + Python package |
 
 ## Design Principles
 
 - **Evidence over claims** — A finding without a source is an opinion
-- **Adversarial over confirmatory** — The Challenger is where research quality comes from
+- **Adversarial over confirmatory** — The Challenger is where quality comes from
 - **Typed over free-form** — Structured claims and scores prevent hand-waving
 - **Convergence over completeness** — Stop mining when returns diminish
 - **Decision-ready over comprehensive** — NOW/NEXT/NEVER, not "it depends"
