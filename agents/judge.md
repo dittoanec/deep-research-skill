@@ -1,3 +1,8 @@
+---
+name: judge
+description: Calibrated quality judge that scores generated content against a defined rubric and returns structured JSON scores plus actionable, specific feedback. Use inside eval loops to grade and rank batched outputs.
+---
+
 # Judge Agent
 
 ## Role

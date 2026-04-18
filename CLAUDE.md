@@ -9,11 +9,12 @@ A unified research skill set providing three capabilities:
 ## Two Integration Modes
 
 ### Claude CLI (skill-based)
-Skills live in `skills/*/SKILL.md`. The master router at `.claude/skills/titan-research.md` auto-detects which skill to invoke based on the user's request.
+Skills live in `skills/*/SKILL.md`. Each skill has frontmatter that lets Claude auto-route to the right one based on the user's request.
 
 ```bash
-# Add to any project:
-claude skill add /path/to/titan-research-kit
+# Install as a plugin:
+claude plugin marketplace add dittoanec/deep-research-skill
+claude plugin install titan-research-kit@titan-research-marketplace
 ```
 
 ### Python / Nova (programmatic)
@@ -45,7 +46,7 @@ titan-research-kit/
 │   ├── eval/             # Eval loop engine
 │   ├── brainstorm/       # Brainstorm engine
 │   └── prompts/          # System prompts (shared)
-└── .claude/skills/       # Master router skill
+└── .claude-plugin/       # Plugin + marketplace manifests
 ```
 
 ## Environment Variables

@@ -2,18 +2,10 @@
   "name": "titan-research-kit",
   "version": "1.0.0",
   "description": "Adversarial multi-pass research, configurable eval loops, and novel angle brainstorming — three research skills in one plugin.",
-  "author": "dittoanec",
+  "author": {
+    "name": "dittoanec"
+  },
   "license": "MIT",
   "homepage": "https://github.com/dittoanec/deep-research-skill",
-  "skills": [
-    "skills/deep-research",
-    "skills/eval-loop",
-    "skills/brainstorm"
-  ],
-  "agents": [
-    "agents/researcher.md",
-    "agents/challenger.md",
-    "agents/compiler.md",
-    "agents/judge.md"
-  ]
+  "repository": "https://github.com/dittoanec/deep-research-skill"
 }

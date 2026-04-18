@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Unified research skill set: deep research, eval loop, and brainstorm — for Claude CLI and Nova",
   "keywords": ["claude", "skill", "research", "adversarial", "eval-loop", "brainstorm", "multi-pass"],
-  "author": "David Seo",
+  "author": "dittoanec",
   "license": "MIT",
-  "repository": "https://github.com/davidyseo/titan-research-kit"
+  "repository": "https://github.com/dittoanec/deep-research-skill"
 }

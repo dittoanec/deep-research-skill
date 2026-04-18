@@ -1,11 +1,14 @@
 {
   "name": "titan-research-marketplace",
   "description": "Marketplace for the Titan Research Kit plugin",
+  "owner": {
+    "name": "dittoanec"
+  },
   "plugins": [
     {
       "name": "titan-research-kit",
       "description": "Adversarial multi-pass research, configurable eval loops, and novel angle brainstorming",
-      "source": "https://github.com/dittoanec/deep-research-skill"
+      "source": "./"
     }
   ]
 }

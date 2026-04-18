@@ -1,3 +1,8 @@
+---
+name: compiler
+description: Senior research editor that synthesizes multiple research passes and adversarial reviews into a single balanced, decision-ready report. Use as the final step of a multi-pass research pipeline.
+---
+
 # Compiler Agent
 
 ## Role
